@@ -14,9 +14,7 @@
     }
 
     function textoFecha(fecha) {
-        return String(fecha.getDate()).padStart(2, '0') + '/' +
-            String(fecha.getMonth() + 1).padStart(2, '0') + '/' +
-            fecha.getFullYear();
+        return String(fecha.getDate()).padStart(2, '0') + '/' + String(fecha.getMonth() + 1).padStart(2, '0') + '/' + fecha.getFullYear();
     }
 
     function sumarMeses(fechaInicio, meses) {
@@ -48,16 +46,11 @@
         const fin = sumarMeses(inicio, mesesDe(usuario.tipoMembresia));
         usuario.fechaFin = textoFecha(fin);
         usuario.totalClases = clasesAbiertas(inicio, fin);
-        usuario.clasesAsistidas = Math.min(
-            Math.max(0, Number(usuario.clasesAsistidas) || 0),
-            usuario.totalClases
-        );
+        usuario.clasesAsistidas = Math.min(Math.max(0, Number(usuario.clasesAsistidas) || 0), usuario.totalClases);
     }
 
     function guardar() {
-        if (typeof usuarios !== 'undefined') {
-            localStorage.setItem('gofit_usuarios', JSON.stringify(usuarios));
-        }
+        if (typeof usuarios !== 'undefined') localStorage.setItem('gofit_usuarios', JSON.stringify(usuarios));
     }
 
     function tiempoRestante(usuario) {
@@ -72,8 +65,7 @@
             return dias + (dias === 1 ? ' día' : ' días');
         }
 
-        let meses = (fin.getFullYear() - hoy.getFullYear()) * 12 +
-            (fin.getMonth() - hoy.getMonth());
+        let meses = (fin.getFullYear() - hoy.getFullYear()) * 12 + (fin.getMonth() - hoy.getMonth());
         let base = sumarMeses(hoy, meses);
         if (base > fin) {
             meses--;
@@ -96,8 +88,7 @@
         hoy.setHours(0, 0, 0, 0);
         fin.setHours(0, 0, 0, 0);
         const pagada = usuarioActual.pagoEstado === 'Pagada';
-        const vigente = fin >= hoy;
-        const permitido = pagada && vigente;
+        const permitido = pagada && fin >= hoy;
         const tiempo = tiempoRestante(usuarioActual);
         const esMensual = mesesDe(usuarioActual.tipoMembresia) === 1;
 
@@ -120,16 +111,14 @@
         if (asistidas) asistidas.textContent = usuarioActual.clasesAsistidas;
         if (asistencias) asistencias.textContent = usuarioActual.clasesAsistidas + ' de ' + usuarioActual.totalClases;
 
-        const pct = usuarioActual.totalClases > 0
-            ? Math.min(100, Math.round(usuarioActual.clasesAsistidas / usuarioActual.totalClases * 100))
-            : 0;
+        const pct = usuarioActual.totalClases > 0 ? Math.min(100, Math.round(usuarioActual.clasesAsistidas / usuarioActual.totalClases * 100)) : 0;
         if (porcentaje) porcentaje.textContent = pct + '%';
         if (progressText) progressText.textContent = pct + '%';
         if (progress) progress.style.width = pct + '%';
         if (etiqueta) etiqueta.textContent = esMensual ? 'Días restantes' : 'Tiempo restante';
         if (dias) dias.textContent = permitido ? tiempo : '0';
-
         if (estado) estado.textContent = permitido ? 'MEMBRESÍA ACTIVA' : (pagada ? 'MEMBRESÍA VENCIDA' : 'PAGO PENDIENTE');
+
         if (pago) {
             pago.textContent = usuarioActual.pagoEstado;
             pago.style.color = permitido ? 'var(--verde)' : 'var(--rojo)';
@@ -138,16 +127,12 @@
         if (alertBox) {
             alertBox.innerHTML = permitido
                 ? '<strong>Pago al día</strong><p>Tu membresía está vigente y tu pago está al día. Te quedan <b>' + tiempo + '</b>.</p>'
-                : '<strong>' + (pagada ? 'Membresía vencida' : 'Pago pendiente') + '</strong><p>' +
-                  (pagada ? 'Tu membresía terminó.' : 'Tu pago no está registrado como pagado.') +
-                  ' El acceso al gimnasio permanece bloqueado hasta regularizar tu situación.</p>';
+                : '<strong>' + (pagada ? 'Membresía vencida' : 'Pago pendiente') + '</strong><p>' + (pagada ? 'Tu membresía terminó.' : 'Tu pago no está registrado como pagado.') + ' El acceso al gimnasio permanece bloqueado hasta regularizar tu situación.</p>';
         }
 
-        if (accessMessage) {
-            accessMessage.textContent = permitido
-                ? 'Tu membresía está al día. Puedes solicitar el ingreso.'
-                : 'No puedes ingresar mientras tu membresía esté pendiente o vencida.';
-        }
+        if (accessMessage) accessMessage.textContent = permitido
+            ? 'Tu membresía está al día. Puedes solicitar el ingreso.'
+            : 'No puedes ingresar mientras tu membresía esté pendiente o vencida.';
 
         const boton = document.getElementById('accessButton');
         if (boton) {
@@ -172,13 +157,10 @@
     if (registro) {
         registro.addEventListener('submit', function () {
             setTimeout(function () {
-                if (typeof usuarios !== 'undefined') {
-                    const nit = document.getElementById('registroNit').value.replace(/\D/g, '');
-                    const usuario = usuarios.find(u => String(u.nit).replace(/\D/g, '') === nit);
-                    if (usuario) {
-                        actualizarUsuario(usuario);
-                        guardar();
-                    }
+                if (typeof usuarios !== 'undefined' && usuarios.length) {
+                    const usuario = usuarios[usuarios.length - 1];
+                    actualizarUsuario(usuario);
+                    guardar();
                 }
             }, 0);
         });
