@@ -1371,5 +1371,21 @@ function escaparHTML(texto) {
 
         }
     );
+    
+    /* =====================================================
+       BOTONES DE REGISTRO E INICIO DE SESIÓN
+    ===================================================== */
+    
+    const mostrarRegistroBtn = document.getElementById("mostrarRegistroBtn");
+    const volverLoginBtn = document.getElementById("volverLoginBtn");
+    
+    if (mostrarRegistroBtn) {
+        mostrarRegistroBtn.addEventListener("click", mostrarRegistro);
+    }
+    
+    if (volverLoginBtn) {
+        volverLoginBtn.addEventListener("click", mostrarLogin);
+    }
+
 
 }
