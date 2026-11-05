@@ -3,6 +3,7 @@ import type { FormEventHandler } from "react";
 import type { LoginCredentials } from "../../types/auth";
 
 
+
 interface LoginFormProps {
   error?: string;
   onSubmit: (credentials: LoginCredentials) => void;
@@ -34,13 +35,12 @@ function LoginForm({ error, onSubmit }: LoginFormProps) {
 
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="auth-form" onSubmit={handleSubmit}>
       <h1>Iniciar sesión</h1>
 
 
       <div>
-        <label htmlFor="carnet">Carnet de identidad</label>
-
+        <label htmlFor="carnet">NIT</label>
 
         <input
           id="carnet"
@@ -79,7 +79,7 @@ function LoginForm({ error, onSubmit }: LoginFormProps) {
       )}
 
 
-      <button type="submit">Ingresar</button>
+      <button className="auth-primary" type="submit">Ingresar</button>
     </form>
   );
 }
