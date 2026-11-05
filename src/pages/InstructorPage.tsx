@@ -4,6 +4,7 @@ import DashboardLayout from "../components/layout/DashboardLayout";
 import ProgressManager from "../components/instructor/ProgressManager";
 import WeeklyPlanEditor from "../components/training/WeeklyPlanEditor";
 import { authRepository } from "../repositories/authRepository";
+import AttendanceManager from "../components/instructor/AttendanceManager";
 
 export default function InstructorPage() {
   const navigate = useNavigate();
@@ -25,7 +26,10 @@ export default function InstructorPage() {
       onLogout={handleLogout}
     >
       <WeeklyPlanEditor instructorName={user.name} />
-      <ProgressManager instructorName={user.name} />
+      <div className="instructor-tools-grid">
+  <ProgressManager instructorName={user.name} />
+  <AttendanceManager instructorName={user.name} />
+      </div>
     </DashboardLayout>
   );
 }

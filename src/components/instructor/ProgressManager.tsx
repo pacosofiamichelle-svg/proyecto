@@ -43,6 +43,7 @@ export default function ProgressManager({ instructorName }: Props) {
 
   return (
     <section>
+        <section className="instructor-tool-card progress-manager"></section>
       <h2>Registrar progreso</h2>
 
       {users.length === 0 ? (
@@ -80,5 +81,6 @@ export default function ProgressManager({ instructorName }: Props) {
         </form>
       )}
     </section>
+    
   );
 }

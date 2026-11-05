@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { trainingPlanRepository } from "../../repositories/trainingPlanRepository";
 import type { TrainingDay } from "../../types/trainingPlan";
+import "../../styles/training.css";
 
 interface Props {
   instructorName: string;
@@ -25,40 +26,59 @@ export default function WeeklyPlanEditor({ instructorName }: Props) {
     setDays((current) =>
       current.map((day) => (day.id === id ? { ...day, [field]: value } : day))
     );
+    setMessage("");
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     trainingPlanRepository.save(days, instructorName);
-    setMessage("Plan guardado. El calendario del usuario ya está actualizado.");
+    setMessage("Plan guardado y actualizado para los usuarios.");
   }
 
   return (
-    <section>
-      <h2>Editar plan semanal</h2>
+    <section className="training-section training-editor">
+      <div className="training-heading">
+        <div>
+          <span className="training-eyebrow">PLAN DE ENTRENAMIENTO</span>
+          <h2>Editar plan semanal</h2>
+          <p>Actualiza los ejercicios, el equipo y las sugerencias de cada día.</p>
+        </div>
+      </div>
 
-      <form onSubmit={handleSubmit}>
-        {days.map((day) => (
-          <fieldset key={day.id}>
-            <legend>{day.day}</legend>
+      <form className="plan-editor" onSubmit={handleSubmit}>
+        <div className="training-editor-grid">
+          {days.map((day, index) => (
+            <fieldset className="training-editor-day" key={day.id}>
+              <legend>
+                <span className="training-day-number">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                {day.day}
+              </legend>
 
-            {fields.map((field) => (
-              <label key={field.key}>
-                {field.label}
-                <textarea
-                  rows={field.key === "muscle" ? 1 : 2}
-                  value={day[field.key]}
-                  onChange={(event) =>
-                    updateDay(day.id, field.key, event.target.value)
-                  }
-                />
-              </label>
-            ))}
-          </fieldset>
-        ))}
+              {fields.map((field) => (
+                <label className="training-editor-label" key={field.key}>
+                  {field.label}
+                  <textarea
+                    rows={field.key === "muscle" ? 1 : 3}
+                    value={day[field.key]}
+                    onChange={(event) =>
+                      updateDay(day.id, field.key, event.target.value)
+                    }
+                  />
+                </label>
+              ))}
+            </fieldset>
+          ))}
+        </div>
 
-        <button type="submit">Guardar plan semanal</button>
-        {message && <p role="status">{message}</p>}
+        <div className="training-editor-actions">
+          <button className="training-save-button" type="submit">
+            Guardar cambios del plan
+          </button>
+
+          {message && <p role="status">{message}</p>}
+        </div>
       </form>
     </section>
   );

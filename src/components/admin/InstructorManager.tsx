@@ -14,6 +14,14 @@ export default function InstructorManager({
 }: Props) {
   const [error, setError] = useState("");
 
+  const morningCount = instructors.filter(
+    (item) => item.turno.toLowerCase().includes("mañana")
+  ).length;
+
+  const afternoonCount = instructors.filter(
+    (item) => item.turno.toLowerCase().includes("tarde")
+  ).length;
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
@@ -39,50 +47,97 @@ export default function InstructorManager({
   }
 
   return (
-    <section>
-      <h2>Registrar instructor</h2>
+    <section className="instructor-management">
+      <h2>Gestión de instructores</h2>
 
-      <form onSubmit={handleSubmit}>
-        <label>
-          Nombre
-          <input name="nombre" required />
-        </label>
+      <div className="instructor-manager-grid">
+        <div className="instructor-form-panel">
+          <h3>Registrar instructor</h3>
 
-        <label>
-          NIT
-          <input name="nit" inputMode="numeric" required />
-        </label>
+          <form onSubmit={handleSubmit}>
+            <label>
+              Nombre
+              <input name="nombre" autoComplete="name" required />
+            </label>
 
-        <label>
-          Contraseña
-          <input name="password" type="password" required />
-        </label>
+            <label>
+              NIT
+              <input name="nit" inputMode="numeric" required />
+            </label>
 
-        <label>
-          Turno
-          <select name="turno">
-            <option>Mañana</option>
-            <option>Tarde</option>
-          </select>
-        </label>
+            <label>
+              Contraseña
+              <input
+                name="password"
+                type="password"
+                minLength={4}
+                required
+              />
+            </label>
 
-        <button type="submit">Registrar instructor</button>
-        {error && <p role="alert">{error}</p>}
-      </form>
+            <label>
+              Turno
+              <select name="turno">
+                <option>Mañana</option>
+                <option>Tarde</option>
+              </select>
+            </label>
 
-      <h3>Instructores registrados</h3>
+            {error && <p className="instructor-form-error" role="alert">{error}</p>}
 
-      {instructors.map((instructor) => (
-        <article key={instructor.nit}>
-          <p>
-            {instructor.nombre} · NIT {instructor.nit} · Turno {instructor.turno}
-          </p>
-          <p>Contraseña: {instructor.password}</p>
-          <button type="button" onClick={() => onRemove(instructor.nit)}>
-            Quitar
-          </button>
-        </article>
-      ))}
+            <button type="submit">Registrar instructor</button>
+          </form>
+        </div>
+
+        <aside className="instructor-summary">
+          <span className="training-eyebrow">COBERTURA DE TURNOS</span>
+          <h3>Equipo actual</h3>
+
+          <div className="instructor-shift-stats">
+            <div>
+              <span>Mañana</span>
+              <strong>{morningCount}</strong>
+              <small>{morningCount === 1 ? "instructor" : "instructores"}</small>
+            </div>
+
+            <div>
+              <span>Tarde</span>
+              <strong>{afternoonCount}</strong>
+              <small>{afternoonCount === 1 ? "instructor" : "instructores"}</small>
+            </div>
+          </div>
+
+          <p>Total registrado: <strong>{instructors.length}</strong></p>
+        </aside>
+      </div>
+
+      <div className="instructor-list">
+        <h3>Instructores registrados</h3>
+
+        {instructors.length === 0 ? (
+          <p>Aún no hay instructores registrados.</p>
+        ) : (
+          <div className="instructor-card-grid">
+            {instructors.map((instructor) => (
+              <article className="instructor-card" key={instructor.nit}>
+                <div>
+                  <h4>{instructor.nombre}</h4>
+                  <p>NIT {instructor.nit}</p>
+                  <p>Turno: {instructor.turno}</p>
+                  <p>Contraseña: {instructor.password}</p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => onRemove(instructor.nit)}
+                >
+                  Quitar
+                </button>
+              </article>
+            ))}
+          </div>
+        )}
+      </div>
     </section>
   );
 }

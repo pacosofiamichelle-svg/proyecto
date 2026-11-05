@@ -11,6 +11,7 @@ export const gymRepository = {
 
   saveUsers(users: GymMember[]): void {
     storageService.set(USERS_KEY, users);
+    window.dispatchEvent(new Event("gofit-usuarios-actualizados"));
   },
 
   getInstructors(): GymInstructor[] {
@@ -19,5 +20,6 @@ export const gymRepository = {
 
   saveInstructors(instructors: GymInstructor[]): void {
     storageService.set(INSTRUCTORS_KEY, instructors);
+    window.dispatchEvent(new Event("gofit-instructores-actualizados"));
   },
 };
